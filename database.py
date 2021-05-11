@@ -27,7 +27,6 @@ class Book(Base):
     author = Column(String)
     amount_available = Column(Integer)
     amount_borrowed = Column(Integer)
-    withdrawals = relationship(Withdrawal, backref='books')
 
 
 Base.metadata.create_all(engine)

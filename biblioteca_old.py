@@ -73,6 +73,7 @@ class Ui_MainWidget(object):
         self.booksSearchFormLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.booksSearchBarcodeLabel)
         self.booksSearchBarcodeInput = QtWidgets.QLineEdit(self.formLayoutWidget_3)
         self.booksSearchBarcodeInput.setObjectName("booksSearchBarcodeInput")
+        self.booksSearchBarcodeInput.returnPressed.connect(self.handleBookForm)
         self.booksSearchFormLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.booksSearchBarcodeInput)
         self.booksSearchTitleLabel = QtWidgets.QLabel(self.formLayoutWidget_3)
         self.booksSearchTitleLabel.setStyleSheet("font-size:16px")
@@ -239,6 +240,7 @@ class Ui_MainWidget(object):
         self.booksWithdrawalStudentLabel.setText(_translate("MainWidget", "Aluno"))
         self.booksWithdrawalGradeLabel.setText(_translate("MainWidget", "Serie"))
         self.booksWithdrawalButton.setText(_translate("MainWidget", "Retirar"))
+        self.booksWithdrawalButton.clicked.connect(self.handleBookForm)
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.booksTab), _translate("MainWidget", "Livros"))
         item = self.withdrawalsTable.horizontalHeaderItem(0)
         item.setText(_translate("MainWidget", "Codigo"))
@@ -266,11 +268,18 @@ class Ui_MainWidget(object):
         self.booksTableWidget.setRowCount(len(book_list))
 
         for book in book_list:
-            if self.book_filter["barcode"] in book.barcode:
-                self.booksTableWidget.setItem(1, 0, QtWidgets.QTableWidgetItem(book.barcode))
-                self.booksTableWidget.setItem(1, 1, QtWidgets.QTableWidgetItem(book.title))
-                self.booksTableWidget.setItem(1, 2, QtWidgets.QTableWidgetItem(book.author))
-                self.booksTableWidget.setItem(1, 3, QtWidgets.QTableWidgetItem(str(book.amount)))
+            self.booksTableWidget.setItem(1, 0, QtWidgets.QTableWidgetItem(book.barcode))
+            self.booksTableWidget.setItem(1, 1, QtWidgets.QTableWidgetItem(book.title))
+            self.booksTableWidget.setItem(1, 2, QtWidgets.QTableWidgetItem(book.author))
+            self.booksTableWidget.setItem(1, 3, QtWidgets.QTableWidgetItem(str(book.amount)))
+
+
+    def handleBookForm(self):
+        barcode = self.booksSearchBarcodeInput.text()
+        title = self.booksSearchTitleInput.text()
+        author = self.booksSearchAuthorInput.text()
+
+        print(barcode, title, author)
 
 
 if __name__ == "__main__":
