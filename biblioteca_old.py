@@ -14,13 +14,6 @@ import interface
 
 class Ui_MainWidget(object):
 
-    def __init__(self):
-        self.book_filter = {
-            "barcode": "",
-            "title": "",
-            "author": "",
-        }
-
     def setupUi(self, MainWidget):
         MainWidget.setObjectName("MainWidget")
         MainWidget.resize(891, 684)
@@ -36,7 +29,7 @@ class Ui_MainWidget(object):
         self.booksTableWidget = QtWidgets.QTableWidget(self.booksTab)
         self.booksTableWidget.setGeometry(QtCore.QRect(6, 254, 851, 371))
         self.booksTableWidget.setObjectName("booksTableWidget")
-        self.booksTableWidget.setColumnCount(4)
+        self.booksTableWidget.setColumnCount(5)
         self.booksTableWidget.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.booksTableWidget.setHorizontalHeaderItem(0, item)
@@ -50,6 +43,9 @@ class Ui_MainWidget(object):
         item = QtWidgets.QTableWidgetItem()
         self.booksTableWidget.setHorizontalHeaderItem(3, item)
         self.booksTableWidget.setColumnWidth(3, 100)
+        item = QtWidgets.QTableWidgetItem()
+        self.booksTableWidget.setHorizontalHeaderItem(4, item)
+        self.booksTableWidget.setColumnWidth(4, 100)
         self.booksSearchFrame = QtWidgets.QFrame(self.booksTab)
         self.booksSearchFrame.setGeometry(QtCore.QRect(10, 10, 241, 171))
         self.booksSearchFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -230,7 +226,9 @@ class Ui_MainWidget(object):
         item = self.booksTableWidget.horizontalHeaderItem(2)
         item.setText(_translate("MainWidget", "Autor"))
         item = self.booksTableWidget.horizontalHeaderItem(3)
-        item.setText(_translate("MainWidget", "Quantidade"))
+        item.setText(_translate("MainWidget", "Disponivel"))
+        item = self.booksTableWidget.horizontalHeaderItem(4)
+        item.setText(_translate("MainWidget", "Retirados"))
         self.booksSearchLabel.setText(_translate("MainWidget", "Pesquisar"))
         self.booksSearchBarcodeLabel.setText(_translate("MainWidget", "Codigo"))
         self.booksSearchTitleLabel.setText(_translate("MainWidget", "Titulo"))
@@ -266,12 +264,12 @@ class Ui_MainWidget(object):
     def loadData(self):
         book_list = interface.select_all_books()
         self.booksTableWidget.setRowCount(len(book_list))
-
-        for book in book_list:
-            self.booksTableWidget.setItem(1, 0, QtWidgets.QTableWidgetItem(book.barcode))
-            self.booksTableWidget.setItem(1, 1, QtWidgets.QTableWidgetItem(book.title))
-            self.booksTableWidget.setItem(1, 2, QtWidgets.QTableWidgetItem(book.author))
-            self.booksTableWidget.setItem(1, 3, QtWidgets.QTableWidgetItem(str(book.amount)))
+        for index, book in enumerate(book_list):
+            self.booksTableWidget.setItem(index, 0, QtWidgets.QTableWidgetItem(book.barcode))
+            self.booksTableWidget.setItem(index, 1, QtWidgets.QTableWidgetItem(book.title))
+            self.booksTableWidget.setItem(index, 2, QtWidgets.QTableWidgetItem(book.author))
+            self.booksTableWidget.setItem(index, 3, QtWidgets.QTableWidgetItem(str(book.amount_available)))
+            self.booksTableWidget.setItem(index, 4, QtWidgets.QTableWidgetItem(str(book.amount_borrowed)))
 
 
     def handleBookForm(self):
@@ -287,6 +285,7 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     MainWidget = QtWidgets.QWidget()
     ui = Ui_MainWidget()
+    interface.initialize_db()
     ui.setupUi(MainWidget)
     ui.loadData()
     MainWidget.show()
