@@ -1,21 +1,35 @@
-from database import Book, session
+from database import Book, session, Withdrawal
+import datetime
 
 
 def select_all_books():
     return session.query(Book).order_by(Book.title).all()
 
 
-def select_one_book(barcode):
-    return session.query.filter(Book.barcode == barcode).first()
+def withdraw_book(barcode, student_name, student_grade):
+    current_date = datetime.datetime.now()
+    new_withdrawal = Withdrawal(book_barcode=barcode, student_name=student_name, student_grade=student_grade,
+                                withdrawal_date=current_date, is_returned=False,
+                                return_date=datetime.datetime.fromtimestamp(0))
+    session.add(new_withdrawal)
+    session.commit()
 
 
-
+def select_all_withdrawals():
+    return session.query(Withdrawal).all()
 
 
 def insert_one_book(barcode, title, author, amount):
-    new_book = Book(barcode, title, author, amount)
-    session.add(new_book)
+    session.execute('''
+    INSERT INTO books(barcode, title, author, amount_available, amount_borrowed) VALUES(:barcode,:title,:author,
+    :amount_available, 0)
+        ON CONFLICT(barcode) DO UPDATE SET amount_available=amount_available+:amount_available;
+    ''', {"barcode": barcode, "title": title, "author": author, "amount_available": amount})
     session.commit()
+
+    # new_book = Book(barcode, title, author, amount)
+    # session.add(new_book)
+    # session.commit()
 
 
 def initialize_db():
@@ -26,9 +40,6 @@ def initialize_db():
         session.commit()
     else:
         pass
-
-
-
 
 
 queries = ''' insert into books (barcode, title, author, amount_available, amount_borrowed) values ('1809a28b-a9b4-49e8-b8b0-beef6d280a00', 'nec nisi volutpat eleifend', 'Tarra Portwaine', 1, 0);

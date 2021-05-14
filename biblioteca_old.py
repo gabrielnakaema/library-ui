@@ -24,11 +24,16 @@ class Ui_MainWidget(object):
         self.tabWidget.setMinimumSize(QtCore.QSize(651, 621))
 
         self.tabWidget.setObjectName("tabWidget")
+
+        # BOOKS TAB
+
         self.booksTab = QtWidgets.QWidget()
         self.booksTab.setObjectName("booksTab")
         self.booksTableWidget = QtWidgets.QTableWidget(self.booksTab)
+        self.booksTableWidget.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.booksTableWidget.setGeometry(QtCore.QRect(6, 254, 851, 371))
         self.booksTableWidget.setObjectName("booksTableWidget")
+        self.booksTableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.booksTableWidget.setColumnCount(5)
         self.booksTableWidget.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
@@ -46,6 +51,9 @@ class Ui_MainWidget(object):
         item = QtWidgets.QTableWidgetItem()
         self.booksTableWidget.setHorizontalHeaderItem(4, item)
         self.booksTableWidget.setColumnWidth(4, 100)
+
+        #Books search form
+
         self.booksSearchFrame = QtWidgets.QFrame(self.booksTab)
         self.booksSearchFrame.setGeometry(QtCore.QRect(10, 10, 241, 171))
         self.booksSearchFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -69,7 +77,7 @@ class Ui_MainWidget(object):
         self.booksSearchFormLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.booksSearchBarcodeLabel)
         self.booksSearchBarcodeInput = QtWidgets.QLineEdit(self.formLayoutWidget_3)
         self.booksSearchBarcodeInput.setObjectName("booksSearchBarcodeInput")
-        self.booksSearchBarcodeInput.returnPressed.connect(self.handleBookForm)
+        self.booksSearchBarcodeInput.returnPressed.connect(self.handleBarcodeInputEnter)
         self.booksSearchFormLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.booksSearchBarcodeInput)
         self.booksSearchTitleLabel = QtWidgets.QLabel(self.formLayoutWidget_3)
         self.booksSearchTitleLabel.setStyleSheet("font-size:16px")
@@ -85,6 +93,9 @@ class Ui_MainWidget(object):
         self.booksSearchAuthorInput = QtWidgets.QLineEdit(self.formLayoutWidget_3)
         self.booksSearchAuthorInput.setObjectName("booksSearchAuthorInput")
         self.booksSearchFormLayout.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.booksSearchAuthorInput)
+
+        # Add book amount form
+
         self.booksAmountFrame = QtWidgets.QFrame(self.booksTab)
         self.booksAmountFrame.setGeometry(QtCore.QRect(260, 10, 241, 101))
         self.booksAmountFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -106,6 +117,9 @@ class Ui_MainWidget(object):
         self.booksAmountButton = QtWidgets.QPushButton(self.formLayoutWidget)
         self.booksAmountButton.setObjectName("booksAmountButton")
         self.booksAmountFormLayout.setWidget(1, QtWidgets.QFormLayout.SpanningRole, self.booksAmountButton)
+
+        # Book withdrawal form
+
         self.booksWithdrawalFrame = QtWidgets.QFrame(self.booksTab)
         self.booksWithdrawalFrame.setGeometry(QtCore.QRect(260, 110, 241, 131))
         self.booksWithdrawalFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -134,12 +148,17 @@ class Ui_MainWidget(object):
         self.booksWithdrawalButton = QtWidgets.QPushButton(self.formLayoutWidget_2)
         self.booksWithdrawalButton.setObjectName("booksWithdrawalButton")
         self.booksWithdrawalFormLayout.setWidget(2, QtWidgets.QFormLayout.SpanningRole, self.booksWithdrawalButton)
+
+        # WITHDRAWALS TAB
+
         self.tabWidget.addTab(self.booksTab, "")
         self.withdrawalsTab = QtWidgets.QWidget()
         self.withdrawalsTab.setObjectName("withdrawalsTab")
         self.withdrawalsTable = QtWidgets.QTableWidget(self.withdrawalsTab)
+        self.withdrawalsTable.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.withdrawalsTable.setGeometry(QtCore.QRect(10, 260, 851, 361))
         self.withdrawalsTable.setObjectName("withdrawalsTable")
+        self.withdrawalsTable.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.withdrawalsTable.setColumnCount(6)
         self.withdrawalsTable.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
@@ -154,6 +173,9 @@ class Ui_MainWidget(object):
         self.withdrawalsTable.setHorizontalHeaderItem(4, item)
         item = QtWidgets.QTableWidgetItem()
         self.withdrawalsTable.setHorizontalHeaderItem(5, item)
+
+        # Withdrawals Form
+
         self.withdrawalsSearchFrame = QtWidgets.QFrame(self.withdrawalsTab)
         self.withdrawalsSearchFrame.setGeometry(QtCore.QRect(10, 10, 241, 241))
         self.withdrawalsSearchFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -211,7 +233,7 @@ class Ui_MainWidget(object):
         self.withdrawalsButton.setObjectName("withdrawalsButton")
         self.tabWidget.addTab(self.withdrawalsTab, "")
         self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
-
+        self.booksTableWidget.itemSelectionChanged.connect(self.handleSelectionChange)
         self.retranslateUi(MainWidget)
         self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWidget)
@@ -235,10 +257,11 @@ class Ui_MainWidget(object):
         self.booksSearchAuthorLabel.setText(_translate("MainWidget", "Autor"))
         self.booksAmountLabel.setText(_translate("MainWidget", "Quantidade"))
         self.booksAmountButton.setText(_translate("MainWidget", "Adicionar"))
+        self.booksAmountButton.clicked.connect(self.handleAddBookAmountForm)
         self.booksWithdrawalStudentLabel.setText(_translate("MainWidget", "Aluno"))
         self.booksWithdrawalGradeLabel.setText(_translate("MainWidget", "Serie"))
         self.booksWithdrawalButton.setText(_translate("MainWidget", "Retirar"))
-        self.booksWithdrawalButton.clicked.connect(self.handleBookForm)
+        self.booksWithdrawalButton.clicked.connect(self.handleWithdrawBookForm)
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.booksTab), _translate("MainWidget", "Livros"))
         item = self.withdrawalsTable.horizontalHeaderItem(0)
         item.setText(_translate("MainWidget", "Codigo"))
@@ -272,12 +295,48 @@ class Ui_MainWidget(object):
             self.booksTableWidget.setItem(index, 4, QtWidgets.QTableWidgetItem(str(book.amount_borrowed)))
 
 
-    def handleBookForm(self):
+    def loadWithdrawalData(self):
+        withdrawal_list = interface.select_all_withdrawals()
+        self.withdrawalsTable.setRowCount((len(withdrawal_list)))
+        for index, withdrawal in enumerate(withdrawal_list):
+            self.withdrawalsTable.setItem(index, 0, QtWidgets.QTableWidgetItem(withdrawal.book.barcode))
+            self.withdrawalsTable.setItem(index, 1, QtWidgets.QTableWidgetItem(withdrawal.book.title))
+            self.withdrawalsTable.setItem(index, 2, QtWidgets.QTableWidgetItem(withdrawal.student_name))
+            self.withdrawalsTable.setItem(index, 3, QtWidgets.QTableWidgetItem(withdrawal.student_grade))
+            self.withdrawalsTable.setItem(index, 4, QtWidgets.QTableWidgetItem(str(withdrawal.withdrawal_date)))
+            self.withdrawalsTable.setItem(index, 5, QtWidgets.QTableWidgetItem(str(withdrawal.is_returned)))
+
+
+    def handleWithdrawBookForm(self):
+        barcode = self.booksSearchBarcodeInput.text()
+        student_name = self.booksWithdrawalStudentInput.text()
+        student_grade = self.booksWithdrawalGradeInput.text()
+        interface.withdraw_book(barcode, student_name, student_grade)
+        self.loadWithdrawalData()
+
+
+    def handleAddBookAmountForm(self):
         barcode = self.booksSearchBarcodeInput.text()
         title = self.booksSearchTitleInput.text()
         author = self.booksSearchAuthorInput.text()
+        amount = self.booksAmountInput.text()
+        interface.insert_one_book(barcode, title, author, int(amount))
+        self.loadData()
 
-        print(barcode, title, author)
+    def handleSelectionChange(self):
+        items = self.booksTableWidget.selectedItems()
+        rows_selected = len(items) // self.booksTableWidget.columnCount()
+        if rows_selected == 1:
+            self.booksSearchBarcodeInput.setText(items[0].text())
+            self.booksSearchTitleInput.setText(items[1].text())
+            self.booksSearchAuthorInput.setText(items[2].text())
+
+    def handleBarcodeInputEnter(self):
+        print('called')
+        for rowIndex in range(self.booksTableWidget.rowCount()):
+            if self.booksTableWidget.item(rowIndex, 0).text() == self.booksSearchBarcodeInput.text():
+                self.booksTableWidget.selectRow(rowIndex)
+                print('true')
 
 
 if __name__ == "__main__":
@@ -288,5 +347,6 @@ if __name__ == "__main__":
     interface.initialize_db()
     ui.setupUi(MainWidget)
     ui.loadData()
+    ui.loadWithdrawalData()
     MainWidget.show()
     sys.exit(app.exec_())

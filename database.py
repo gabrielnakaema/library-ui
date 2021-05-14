@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, String, Integer, ForeignKey
+from sqlalchemy import create_engine, Column, String, Integer, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -16,8 +16,9 @@ class Withdrawal(Base):
     book = relationship('Book')
     student_name = Column(String)
     student_grade = Column(String)
-    withdrawal_date = Column(String)
-    return_date = Column(String)
+    withdrawal_date = Column(DateTime)
+    is_returned = Column(Boolean)
+    return_date = Column(DateTime)
 
 
 class Book(Base):
