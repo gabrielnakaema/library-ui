@@ -17,7 +17,6 @@ class Ui_MainWidget(object):
     def setupUi(self, MainWidget):
         MainWidget.setObjectName("MainWidget")
         MainWidget.resize(891, 684)
-        MainWidget.setStyleSheet("")
         self.gridLayout = QtWidgets.QGridLayout(MainWidget)
         self.gridLayout.setObjectName("gridLayout")
         self.tabWidget = QtWidgets.QTabWidget(MainWidget)
@@ -25,17 +24,27 @@ class Ui_MainWidget(object):
 
         self.tabWidget.setObjectName("tabWidget")
 
+        # AUTO RESIZING LAYOUT
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+
         # BOOKS TAB
 
         self.booksTab = QtWidgets.QWidget()
         self.booksTab.setObjectName("booksTab")
+        sizePolicy.setHeightForWidth(self.booksTab.sizePolicy().hasHeightForWidth())
+        self.booksTabLayout = QtWidgets.QGridLayout(self.booksTab)
+        self.booksTabLayout.setObjectName("booksTabLayout")
         self.booksTableWidget = QtWidgets.QTableWidget(self.booksTab)
         self.booksTableWidget.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
-        self.booksTableWidget.setGeometry(QtCore.QRect(6, 254, 851, 371))
+        # self.booksTableWidget.setGeometry(QtCore.QRect(6, 254, 851, 371))
+        self.booksTableWidget.setMinimumSize(QtCore.QSize(500, 300))
         self.booksTableWidget.setObjectName("booksTableWidget")
         self.booksTableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.booksTableWidget.setColumnCount(5)
         self.booksTableWidget.setRowCount(0)
+        sizePolicy.setHeightForWidth(self.booksTableWidget.sizePolicy().hasHeightForWidth())
         item = QtWidgets.QTableWidgetItem()
         self.booksTableWidget.setHorizontalHeaderItem(0, item)
         self.booksTableWidget.setColumnWidth(0, 250)
@@ -51,6 +60,7 @@ class Ui_MainWidget(object):
         item = QtWidgets.QTableWidgetItem()
         self.booksTableWidget.setHorizontalHeaderItem(4, item)
         self.booksTableWidget.setColumnWidth(4, 100)
+        self.booksTabLayout.addWidget(self.booksTableWidget, 2, 0, 0, 1)
 
         #Books search form
 
@@ -153,6 +163,8 @@ class Ui_MainWidget(object):
 
         self.tabWidget.addTab(self.booksTab, "")
         self.withdrawalsTab = QtWidgets.QWidget()
+        self.withdrawalsTabLayout = QtWidgets.QGridLayout(self.withdrawalsTab)
+        self.booksTabLayout.setObjectName("withdrawalsTabLayout")
         self.withdrawalsTab.setObjectName("withdrawalsTab")
         self.withdrawalsTable = QtWidgets.QTableWidget(self.withdrawalsTab)
         self.withdrawalsTable.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
@@ -173,7 +185,9 @@ class Ui_MainWidget(object):
         self.withdrawalsTable.setHorizontalHeaderItem(4, item)
         item = QtWidgets.QTableWidgetItem()
         self.withdrawalsTable.setHorizontalHeaderItem(5, item)
-
+        sizePolicy.setHeightForWidth(self.withdrawalsTable.sizePolicy().hasHeightForWidth())
+        self.withdrawalsTable.setMinimumSize(QtCore.QSize(500, 300))
+        self.withdrawalsTabLayout.addWidget(self.withdrawalsTable, 2, 0, 0, 1)
         # Withdrawals Form
 
         self.withdrawalsSearchFrame = QtWidgets.QFrame(self.withdrawalsTab)
@@ -294,7 +308,6 @@ class Ui_MainWidget(object):
             self.booksTableWidget.setItem(index, 3, QtWidgets.QTableWidgetItem(str(book.amount_available)))
             self.booksTableWidget.setItem(index, 4, QtWidgets.QTableWidgetItem(str(book.amount_borrowed)))
 
-
     def loadWithdrawalData(self):
         withdrawal_list = interface.select_all_withdrawals()
         self.withdrawalsTable.setRowCount((len(withdrawal_list)))
@@ -306,14 +319,12 @@ class Ui_MainWidget(object):
             self.withdrawalsTable.setItem(index, 4, QtWidgets.QTableWidgetItem(str(withdrawal.withdrawal_date)))
             self.withdrawalsTable.setItem(index, 5, QtWidgets.QTableWidgetItem(str(withdrawal.is_returned)))
 
-
     def handleWithdrawBookForm(self):
         barcode = self.booksSearchBarcodeInput.text()
         student_name = self.booksWithdrawalStudentInput.text()
         student_grade = self.booksWithdrawalGradeInput.text()
         interface.withdraw_book(barcode, student_name, student_grade)
         self.loadWithdrawalData()
-
 
     def handleAddBookAmountForm(self):
         barcode = self.booksSearchBarcodeInput.text()
@@ -332,11 +343,9 @@ class Ui_MainWidget(object):
             self.booksSearchAuthorInput.setText(items[2].text())
 
     def handleBarcodeInputEnter(self):
-        print('called')
         for rowIndex in range(self.booksTableWidget.rowCount()):
             if self.booksTableWidget.item(rowIndex, 0).text() == self.booksSearchBarcodeInput.text():
                 self.booksTableWidget.selectRow(rowIndex)
-                print('true')
 
 
 if __name__ == "__main__":
