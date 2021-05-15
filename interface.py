@@ -19,6 +19,11 @@ def select_all_withdrawals():
     return session.query(Withdrawal).all()
 
 
+def return_book(barcode, student_name):
+    session.query(Withdrawal).filter(Withdrawal.student_name == student_name, Withdrawal.book_barcode == barcode).update({"is_returned": True})
+    session.commit()
+
+
 def insert_one_book(barcode, title, author, amount):
     session.execute('''
     INSERT INTO books(barcode, title, author, amount_available, amount_borrowed) VALUES(:barcode,:title,:author,

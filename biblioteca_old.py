@@ -188,6 +188,8 @@ class Ui_MainWidget(object):
         sizePolicy.setHeightForWidth(self.withdrawalsTable.sizePolicy().hasHeightForWidth())
         self.withdrawalsTable.setMinimumSize(QtCore.QSize(500, 300))
         self.withdrawalsTabLayout.addWidget(self.withdrawalsTable, 2, 0, 0, 1)
+        self.withdrawalsTable.itemSelectionChanged.connect(self.handleWithdrawalSelectionChange)
+
         # Withdrawals Form
 
         self.withdrawalsSearchFrame = QtWidgets.QFrame(self.withdrawalsTab)
@@ -245,9 +247,10 @@ class Ui_MainWidget(object):
         self.withdrawalsButton = QtWidgets.QPushButton(self.withdrawalsTab)
         self.withdrawalsButton.setGeometry(QtCore.QRect(280, 110, 88, 34))
         self.withdrawalsButton.setObjectName("withdrawalsButton")
+        self.withdrawalsButton.pressed.connect(self.returnBook)
         self.tabWidget.addTab(self.withdrawalsTab, "")
         self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
-        self.booksTableWidget.itemSelectionChanged.connect(self.handleSelectionChange)
+        self.booksTableWidget.itemSelectionChanged.connect(self.handleBookSelectionChange)
         self.retranslateUi(MainWidget)
         self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWidget)
@@ -298,7 +301,7 @@ class Ui_MainWidget(object):
         self.withdrawalsButton.setText(_translate("MainWidget", "Devolver"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.withdrawalsTab), _translate("MainWidget", "Retiradas"))
 
-    def loadData(self):
+    def loadBooksData(self):
         book_list = interface.select_all_books()
         self.booksTableWidget.setRowCount(len(book_list))
         for index, book in enumerate(book_list):
@@ -332,9 +335,9 @@ class Ui_MainWidget(object):
         author = self.booksSearchAuthorInput.text()
         amount = self.booksAmountInput.text()
         interface.insert_one_book(barcode, title, author, int(amount))
-        self.loadData()
+        self.loadBooksData()
 
-    def handleSelectionChange(self):
+    def handleBookSelectionChange(self):
         items = self.booksTableWidget.selectedItems()
         rows_selected = len(items) // self.booksTableWidget.columnCount()
         if rows_selected == 1:
@@ -347,6 +350,21 @@ class Ui_MainWidget(object):
             if self.booksTableWidget.item(rowIndex, 0).text() == self.booksSearchBarcodeInput.text():
                 self.booksTableWidget.selectRow(rowIndex)
 
+    def handleWithdrawalSelectionChange(self):
+        items = self.withdrawalsTable.selectedItems()
+        rows_selected = len(items) // self.booksTableWidget.columnCount()
+        if rows_selected == 1:
+            self.withdrawalsSearchBarcodeInput.setText(items[0].text())
+            self.withdrawalsSearchTitleInput.setText(items[1].text())
+            self.withdrawalsSearchStudentInput.setText(items[2].text())
+            self.withdrawalsSearchGradeInput.setText(items[3].text())
+
+    def returnBook(self):
+        barcode = self.withdrawalsSearchBarcodeInput.text()
+        student_name = self.withdrawalsSearchStudentInput.text()
+        interface.return_book(barcode, student_name)
+        self.loadWithdrawalData()
+
 
 if __name__ == "__main__":
     import sys
@@ -355,7 +373,7 @@ if __name__ == "__main__":
     ui = Ui_MainWidget()
     interface.initialize_db()
     ui.setupUi(MainWidget)
-    ui.loadData()
+    ui.loadBooksData()
     ui.loadWithdrawalData()
     MainWidget.show()
     sys.exit(app.exec_())
