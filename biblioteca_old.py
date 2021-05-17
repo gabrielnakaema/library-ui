@@ -249,6 +249,36 @@ class Ui_MainWidget(object):
         self.withdrawalsButton.setObjectName("withdrawalsButton")
         self.withdrawalsButton.pressed.connect(self.returnBook)
         self.tabWidget.addTab(self.withdrawalsTab, "")
+
+        # RETURNS TAB
+
+        self.returnsTab = QtWidgets.QWidget()
+        self.returnsTab.setObjectName("returnsTab")
+
+        # Returns Table Widget
+        self.returnsTable = QtWidgets.QTableWidget(self.returnsTab)
+        self.returnsTable.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.returnsTable.setObjectName("returnsTable")
+        self.returnsTable.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.returnsTable.setColumnCount(6)
+        self.returnsTable.setRowCount(0)
+        item = QtWidgets.QTableWidgetItem()
+        self.returnsTable.setHorizontalHeaderItem(0, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.returnsTable.setHorizontalHeaderItem(1, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.returnsTable.setHorizontalHeaderItem(2, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.returnsTable.setHorizontalHeaderItem(3, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.returnsTable.setHorizontalHeaderItem(4, item)
+        item = QtWidgets.QTableWidgetItem()
+        self.returnsTable.setHorizontalHeaderItem(5, item)
+        sizePolicy.setHeightForWidth(self.returnsTable.sizePolicy().hasHeightForWidth())
+        self.returnsTable.setMinimumSize(QtCore.QSize(500, 300))
+        self.tabWidget.addTab(self.returnsTab, "Devoluções")
+
+        # END
         self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
         self.booksTableWidget.itemSelectionChanged.connect(self.handleBookSelectionChange)
         self.retranslateUi(MainWidget)
@@ -299,6 +329,18 @@ class Ui_MainWidget(object):
         self.withdrawalsSearchStudentLabel.setText(_translate("MainWidget", "Aluno"))
         self.withdrawalsSearchGradeLabel.setText(_translate("MainWidget", "Serie"))
         self.withdrawalsButton.setText(_translate("MainWidget", "Devolver"))
+        item = self.returnsTable.horizontalHeaderItem(0)
+        item.setText(_translate("MainWidget", "Codigo"))
+        item = self.returnsTable.horizontalHeaderItem(1)
+        item.setText(_translate("MainWidget", "Titulo"))
+        item = self.returnsTable.horizontalHeaderItem(2)
+        item.setText(_translate("MainWidget", "Aluno"))
+        item = self.returnsTable.horizontalHeaderItem(3)
+        item.setText(_translate("MainWidget", "Serie"))
+        item = self.returnsTable.horizontalHeaderItem(4)
+        item.setText(_translate("MainWidget", "Data Retirada"))
+        item = self.returnsTable.horizontalHeaderItem(5)
+        item.setText(_translate("MainWidget", "Devolvido"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.withdrawalsTab), _translate("MainWidget", "Retiradas"))
 
     def loadBooksData(self):
