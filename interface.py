@@ -16,11 +16,20 @@ def withdraw_book(barcode, student_name, student_grade):
 
 
 def select_all_withdrawals():
-    return session.query(Withdrawal).all()
+    withdrawals = session.query(Withdrawal).filter(Withdrawal.is_returned == False).all()
+    return withdrawals
+
+
+def select_all_returns():
+    returns = session.query(Withdrawal).filter(Withdrawal.is_returned == True).all()
+    return returns
 
 
 def return_book(barcode, student_name):
-    session.query(Withdrawal).filter(Withdrawal.student_name == student_name, Withdrawal.book_barcode == barcode).update({"is_returned": True})
+    current_date = datetime.datetime.now()
+    session.query(Withdrawal).filter(Withdrawal.student_name == student_name,
+                                     Withdrawal.book_barcode == barcode).update({"is_returned": True,
+                                                                                 "return_date": current_date})
     session.commit()
 
 
@@ -31,10 +40,6 @@ def insert_one_book(barcode, title, author, amount):
         ON CONFLICT(barcode) DO UPDATE SET amount_available=amount_available+:amount_available;
     ''', {"barcode": barcode, "title": title, "author": author, "amount_available": amount})
     session.commit()
-
-    # new_book = Book(barcode, title, author, amount)
-    # session.add(new_book)
-    # session.commit()
 
 
 def initialize_db():
