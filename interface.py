@@ -11,6 +11,10 @@ def withdraw_book(barcode, student_name, student_grade):
     new_withdrawal = Withdrawal(book_barcode=barcode, student_name=student_name, student_grade=student_grade,
                                 withdrawal_date=current_date, is_returned=False,
                                 return_date=datetime.datetime.fromtimestamp(0))
+    book = session.query(Book).filter(Book.barcode == barcode).first()
+    book.amount_borrowed = book.amount_borrowed + 1
+    if book.amount_available > 0:
+        book.amount_available = book.amount_available - 1
     session.add(new_withdrawal)
     session.commit()
 

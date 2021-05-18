@@ -21,7 +21,6 @@ class Ui_MainWidget(object):
         self.gridLayout.setObjectName("gridLayout")
         self.tabWidget = QtWidgets.QTabWidget(MainWidget)
         self.tabWidget.setMinimumSize(QtCore.QSize(651, 621))
-
         self.tabWidget.setObjectName("tabWidget")
 
         # AUTO RESIZING LAYOUT
@@ -221,13 +220,6 @@ class Ui_MainWidget(object):
         self.withdrawalsSearchTitleInput = QtWidgets.QLineEdit(self.formLayoutWidget_4)
         self.withdrawalsSearchTitleInput.setObjectName("withdrawalsSearchTitleInput")
         self.withdrawlsSearchFormLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.withdrawalsSearchTitleInput)
-        self.withdrawalsSearchAuthorLabel = QtWidgets.QLabel(self.formLayoutWidget_4)
-        self.withdrawalsSearchAuthorLabel.setStyleSheet("font-size:16px")
-        self.withdrawalsSearchAuthorLabel.setObjectName("withdrawalsSearchAuthorLabel")
-        self.withdrawlsSearchFormLayout.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.withdrawalsSearchAuthorLabel)
-        self.withdrawalsSearchAuthorInput = QtWidgets.QLineEdit(self.formLayoutWidget_4)
-        self.withdrawalsSearchAuthorInput.setObjectName("withdrawalsSearchAuthorInput")
-        self.withdrawlsSearchFormLayout.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.withdrawalsSearchAuthorInput)
         self.withdrawalsSearchStudentLabel = QtWidgets.QLabel(self.formLayoutWidget_4)
         self.withdrawalsSearchStudentLabel.setStyleSheet("font-size:16px")
         self.withdrawalsSearchStudentLabel.setObjectName("withdrawalsSearchStudentLabel")
@@ -299,7 +291,7 @@ class Ui_MainWidget(object):
         item.setText(_translate("MainWidget", "Disponivel"))
         item = self.booksTableWidget.horizontalHeaderItem(4)
         item.setText(_translate("MainWidget", "Retirados"))
-        self.booksSearchLabel.setText(_translate("MainWidget", "Pesquisar"))
+        self.booksSearchLabel.setText(_translate("MainWidget", "Livro"))
         self.booksSearchBarcodeLabel.setText(_translate("MainWidget", "Codigo"))
         self.booksSearchTitleLabel.setText(_translate("MainWidget", "Titulo"))
         self.booksSearchAuthorLabel.setText(_translate("MainWidget", "Autor"))
@@ -321,10 +313,9 @@ class Ui_MainWidget(object):
         item.setText(_translate("MainWidget", "Serie"))
         item = self.withdrawalsTable.horizontalHeaderItem(4)
         item.setText(_translate("MainWidget", "Data Retirada"))
-        self.withdrawalsSearchLabel.setText(_translate("MainWidget", "Pesquisar"))
+        self.withdrawalsSearchLabel.setText(_translate("MainWidget", "Dados Retirada"))
         self.withdrawalsSearchBarcodeLabel.setText(_translate("MainWidget", "Codigo"))
         self.withdrawalsSearchTitleLabel.setText(_translate("MainWidget", "Titulo"))
-        self.withdrawalsSearchAuthorLabel.setText(_translate("MainWidget", "Autor"))
         self.withdrawalsSearchStudentLabel.setText(_translate("MainWidget", "Aluno"))
         self.withdrawalsSearchGradeLabel.setText(_translate("MainWidget", "Serie"))
         self.withdrawalsButton.setText(_translate("MainWidget", "Devolver"))
@@ -360,7 +351,7 @@ class Ui_MainWidget(object):
             self.withdrawalsTable.setItem(index, 1, QtWidgets.QTableWidgetItem(withdrawal.book.title))
             self.withdrawalsTable.setItem(index, 2, QtWidgets.QTableWidgetItem(withdrawal.student_name))
             self.withdrawalsTable.setItem(index, 3, QtWidgets.QTableWidgetItem(withdrawal.student_grade))
-            self.withdrawalsTable.setItem(index, 4, QtWidgets.QTableWidgetItem(str(withdrawal.withdrawal_date)))
+            self.withdrawalsTable.setItem(index, 4, QtWidgets.QTableWidgetItem(withdrawal.withdrawal_date.strftime("%d/%m/%Y")))
 
 
     def loadReturnsData(self):
@@ -371,8 +362,8 @@ class Ui_MainWidget(object):
             self.returnsTable.setItem(index, 1, QtWidgets.QTableWidgetItem(withdrawal.book.title))
             self.returnsTable.setItem(index, 2, QtWidgets.QTableWidgetItem(withdrawal.student_name))
             self.returnsTable.setItem(index, 3, QtWidgets.QTableWidgetItem(withdrawal.student_grade))
-            self.returnsTable.setItem(index, 4, QtWidgets.QTableWidgetItem(str(withdrawal.withdrawal_date)))
-            self.returnsTable.setItem(index, 5, QtWidgets.QTableWidgetItem(str(withdrawal.return_date)))
+            self.returnsTable.setItem(index, 4, QtWidgets.QTableWidgetItem(withdrawal.withdrawal_date.strftime("%d/%m/%Y")))
+            self.returnsTable.setItem(index, 5, QtWidgets.QTableWidgetItem(withdrawal.return_date.strftime("%d/%m/%Y")))
 
 
 
@@ -382,6 +373,7 @@ class Ui_MainWidget(object):
         student_grade = self.booksWithdrawalGradeInput.text()
         interface.withdraw_book(barcode, student_name, student_grade)
         self.loadWithdrawalData()
+        self.loadBooksData()
 
     def handleAddBookAmountForm(self):
         barcode = self.booksSearchBarcodeInput.text()
@@ -418,6 +410,7 @@ class Ui_MainWidget(object):
         student_name = self.withdrawalsSearchStudentInput.text()
         interface.return_book(barcode, student_name)
         self.loadWithdrawalData()
+        self.loadReturnsData()
 
 
 if __name__ == "__main__":
