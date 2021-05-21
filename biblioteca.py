@@ -192,6 +192,7 @@ class Ui_MainWidget(object):
         self.withdrawalsView.resizeColumnsToContents()
         self.withdrawalsView.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.withdrawalsView.setSortingEnabled(True)
+        self.withdrawalsView.selectionModel().selectionChanged.connect(self.handleWithdrawalSelectionChange)
         self.withdrawalsTabLayout.addWidget(self.withdrawalsView, 2, 0, 0, 1)
 
         # Withdrawals Form
@@ -350,6 +351,19 @@ class Ui_MainWidget(object):
         self.booksSearchBarcodeInput.setText(barcode)
         self.booksSearchTitleInput.setText(title)
         self.booksSearchAuthorInput.setText(author)
+
+    def handleWithdrawalSelectionChange(self):
+        selected = self.withdrawalsView.selectionModel().selectedRows()
+        row = selected[0].row()
+        barcode = selected[0].sibling(row, 1).data()
+        title = selected[0].sibling(row, 2).data()
+        student_name = selected[0].sibling(row, 3).data()
+        student_grade = selected[0].sibling(row, 4).data()
+        self.withdrawalsSearchBarcodeInput.setText(barcode)
+        self.withdrawalsSearchTitleInput.setText(title)
+        self.withdrawalsSearchStudentInput.setText(student_name)
+        self.withdrawalsSearchGradeInput.setText(student_grade)
+
 
     def withdrawBook(self):
         barcode = self.booksSearchBarcodeInput.text()
