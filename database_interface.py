@@ -51,3 +51,27 @@ def addWithdrawalEntry(barcode, student_name, student_grade):
     insertWithdrawalQuery.addBindValue(student_grade)
     insertWithdrawalQuery.addBindValue(current_date)
     insertWithdrawalQuery.exec()
+
+def returnOneBook(id, barcode):
+    currentDate = datetime.now().strftime("%d/%m/%Y")
+    returnBookQuery = QSqlQuery(connection)
+    returnBookQuery.prepare(
+        """
+        UPDATE withdrawals
+        SET is_returned=1, return_date=?
+        WHERE id=?
+        """
+    )
+    returnBookQuery.addBindValue(currentDate)
+    returnBookQuery.addBindValue(id)
+    returnBookQuery.exec()
+    updateBookEntryQuery = QSqlQuery(connection)
+    updateBookEntryQuery.prepare(
+        """
+        UPDATE books
+        SET amount_available=amount_available+1, amount_borrowed=amount_borrowed-1
+        WHERE barcode=?
+        """
+    )
+    updateBookEntryQuery.addBindValue(barcode)
+    updateBookEntryQuery.exec()

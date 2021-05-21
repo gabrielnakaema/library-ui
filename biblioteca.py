@@ -244,6 +244,7 @@ class Ui_MainWidget(object):
         self.withdrawalsButton = QtWidgets.QPushButton(self.withdrawalsTab)
         self.withdrawalsButton.setGeometry(QtCore.QRect(280, 110, 88, 34))
         self.withdrawalsButton.setObjectName("withdrawalsButton")
+        self.withdrawalsButton.pressed.connect(self.returnBook)
         self.tabWidget.addTab(self.withdrawalsTab, "")
 
         # RETURNS TAB
@@ -362,6 +363,15 @@ class Ui_MainWidget(object):
         self.withdrawalsModel.select()
         self.resetBooksInputs()
 
+    def returnBook(self):
+        selection = self.withdrawalsView.selectionModel().selectedRows()
+        for selectedItem in selection:
+            id_ = selectedItem.sibling(selectedItem.row(), 0).data()
+            barcode = selectedItem.sibling(selectedItem.row(), 1).data()
+            database_interface.returnOneBook(id_, barcode)
+        self.withdrawalsModel.select()
+        self.returnsModel.select()
+        self.booksModel.select()
 
 
 if __name__ == "__main__":
