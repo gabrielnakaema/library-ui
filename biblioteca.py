@@ -11,6 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 import database_interface
 from database import connection
+from FocusQLineEdit import FocusQLineEdit
 
 class Ui_MainWidget(object):
 
@@ -80,7 +81,7 @@ class Ui_MainWidget(object):
         self.booksSearchBarcodeLabel.setStyleSheet("font-size:16px")
         self.booksSearchBarcodeLabel.setObjectName("booksSearchBarcodeLabel")
         self.booksSearchFormLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.booksSearchBarcodeLabel)
-        self.booksSearchBarcodeInput = QtWidgets.QLineEdit(self.formLayoutWidget_3)
+        self.booksSearchBarcodeInput = FocusQLineEdit(self.formLayoutWidget_3)
         self.booksSearchBarcodeInput.setObjectName("booksSearchBarcodeInput")
         self.booksSearchBarcodeInput.returnPressed.connect(self.handleBarcodeInputEnter)
         self.booksSearchFormLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.booksSearchBarcodeInput)
