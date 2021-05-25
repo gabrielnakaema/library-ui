@@ -345,25 +345,27 @@ class Ui_MainWidget(object):
 
     def handleBookSelectionChange(self):
         selected = self.booksView.selectionModel().selectedRows()
-        row = selected[0].row()
-        barcode = selected[0].sibling(row, 0).data()
-        title = selected[0].sibling(row, 1).data()
-        author = selected[0].sibling(row, 2).data()
-        self.booksSearchBarcodeInput.setText(barcode)
-        self.booksSearchTitleInput.setText(title)
-        self.booksSearchAuthorInput.setText(author)
+        if len(selected) > 0:
+            row = selected[0].row()
+            barcode = selected[0].sibling(row, 0).data()
+            title = selected[0].sibling(row, 1).data()
+            author = selected[0].sibling(row, 2).data()
+            self.booksSearchBarcodeInput.setText(barcode)
+            self.booksSearchTitleInput.setText(title)
+            self.booksSearchAuthorInput.setText(author)
 
     def handleWithdrawalSelectionChange(self):
         selected = self.withdrawalsView.selectionModel().selectedRows()
-        row = selected[0].row()
-        barcode = selected[0].sibling(row, 1).data()
-        title = selected[0].sibling(row, 2).data()
-        student_name = selected[0].sibling(row, 3).data()
-        student_grade = selected[0].sibling(row, 4).data()
-        self.withdrawalsSearchBarcodeInput.setText(barcode)
-        self.withdrawalsSearchTitleInput.setText(title)
-        self.withdrawalsSearchStudentInput.setText(student_name)
-        self.withdrawalsSearchGradeInput.setText(student_grade)
+        if len(selected) > 0:
+            row = selected[0].row()
+            barcode = selected[0].sibling(row, 1).data()
+            title = selected[0].sibling(row, 2).data()
+            student_name = selected[0].sibling(row, 3).data()
+            student_grade = selected[0].sibling(row, 4).data()
+            self.withdrawalsSearchBarcodeInput.setText(barcode)
+            self.withdrawalsSearchTitleInput.setText(title)
+            self.withdrawalsSearchStudentInput.setText(student_name)
+            self.withdrawalsSearchGradeInput.setText(student_grade)
 
 
     def withdrawBook(self):
@@ -392,6 +394,7 @@ class Ui_MainWidget(object):
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
+    app.setStyle("Breeze")
     if not connection.open():
         PyQt5.QtWidgets.QMessageBox.critical(None, "DATABASE ERROR: %s" % connection.lastError().databaseText())
         sys.exit(1)
@@ -400,21 +403,3 @@ if __name__ == "__main__":
     ui.setupUi(MainWidget)
     MainWidget.show()
     sys.exit(app.exec_())
-
-
-# foundBook = self.booksModel.match(self.booksModel.index(column=0), role=0, value=barcode)
-        # print('hello2')
-        # if len(foundBook) > 0:
-        #     print(foundBook)
-        #     # print(self.booksModel.data(foundBook[0]))
-        #     # self.booksModel.setData(foundBook[0])
-        # else:
-        #     newRecord = self.booksModel.record()
-        #     newRecord.setValue("barcode", barcode)
-        #     newRecord.setValue("title", title)
-        #     newRecord.setValue("author", author)
-        #     newRecord.setValue("amount_available", int(amount))
-        #     if self.booksModel.insertRecord(-1, newRecord):
-        #         self.resetBooksInputs()
-        #     else:
-        #         PyQt5.QtWidgets.QMessageBox.critical(None, "DATABASE ERROR: %s" % connection.lastError().databaseText())
