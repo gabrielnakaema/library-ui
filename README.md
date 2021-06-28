@@ -10,7 +10,7 @@ This is a simple application built for keeping track of books in a school's libr
 
 ## How to run
 
-The following is how you can get these application up and running locally.
+The following is how you can get this application up and running locally.
 
 ### Prerequisites
 * Python (Only tested on python versions 3.7-3.9)
